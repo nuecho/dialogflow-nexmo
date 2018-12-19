@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dialogflow-nexmo should throw with any missing dialogflow required options 1`] = `"Missing required dialogflow fields: projectId"`;
+
+exports[`dialogflow-nexmo should throw with any missing nexmo required options 1`] = `"Missing required nexmo fields: apiKey"`;
+
+exports[`dialogflow-nexmo should throw with no dialogflow options 1`] = `"Missing required dialogflow fields: projectId"`;
+
+exports[`dialogflow-nexmo should throw with no nexmo options 1`] = `"Missing required nexmo fields: apiKey, apiSecret, did"`;
