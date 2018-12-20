@@ -3,7 +3,7 @@
   "licence": "Apache-2.0",
   "description": "A bridge between the Nexmo Messaging API and Google Dialogflow.",
   "main": "src/dialogflow-nexmo.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
