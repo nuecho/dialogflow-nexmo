@@ -1,21 +1,21 @@
-'use strict';
+"use strict";
 
 // A middleware to connect Nexmo to Dialogflow.
 
-const util = require('util');
-const _ = require('lodash');
-const Nexmo = require('nexmo');
+const util = require("util");
+const _ = require("lodash");
+const Nexmo = require("nexmo");
 
-const dialogflowBeta = require('dialogflow').v2beta1;
-const dialogflow = require('dialogflow').v2;
+const dialogflowBeta = require("dialogflow").v2beta1;
+const dialogflow = require("dialogflow").v2;
 
-const DEFAULT_USER = '-';
-const DEFAULT_THROTTLING_MS = '500';
-const DEFAULT_LANGUAGE = 'en-US';
+const DEFAULT_USER = "-";
+const DEFAULT_THROTTLING_MS = "500";
+const DEFAULT_LANGUAGE = "en-US";
 
-const DIALOGFLOW_REQUIRED_FIELDS = ['projectId'];
+const DIALOGFLOW_REQUIRED_FIELDS = ["projectId"];
 
-const NEXMO_REQUIRED_FIELDS = ['apiKey', 'apiSecret', 'did'];
+const NEXMO_REQUIRED_FIELDS = ["apiKey", "apiSecret", "did"];
 
 ///////////////////////////////
 //
@@ -24,8 +24,8 @@ const NEXMO_REQUIRED_FIELDS = ['apiKey', 'apiSecret', 'did'];
 ///////////////////////////////
 
 const connect = async (message, origination, options) => {
-  checkOptions('dialogflow', options.dialogflow, DIALOGFLOW_REQUIRED_FIELDS);
-  checkOptions('nexmo', options.nexmo, NEXMO_REQUIRED_FIELDS);
+  checkOptions("dialogflow", options.dialogflow, DIALOGFLOW_REQUIRED_FIELDS);
+  checkOptions("nexmo", options.nexmo, NEXMO_REQUIRED_FIELDS);
   console.log(`Received SMS: ${util.inspect(options)}`);
   console.log(`${origination} ==> ${message}`);
   return await queryDialogFlow(message, origination, options.dialogflow)
@@ -84,7 +84,7 @@ const queryDialogFlow = (inputText, sessionId, options) =>
     return sessionClient
       .detectIntent(request)
       .then(responses => resolve(extractResponses(responses)))
-      .catch(err => reject(console.error('ERROR:', err)));
+      .catch(err => reject(console.error("ERROR:", err)));
   });
 
 // If the `env` option is set, we are using the Beta API
@@ -112,13 +112,13 @@ const buildQueryInput = (inputText, languageCode) => {
 
 const extractResponses = responses =>
   responses[0].queryResult.fulfillmentText ||
-  _.flatMap(responses[0].queryResult.fulfillmentMessages, 'text.text');
+  _.flatMap(responses[0].queryResult.fulfillmentMessages, "text.text");
 
 const normalize = text => {
   return text
-    .replace(new RegExp('’', 'g'), "'")
-    .replace(new RegExp('«', 'g'), '"')
-    .replace(new RegExp('»', 'g'), '"');
+    .replace(new RegExp("’", "g"), "'")
+    .replace(new RegExp("«", "g"), '"')
+    .replace(new RegExp("»", "g"), '"');
 };
 
 const sendSmsResponse = (messages, to, options) => {
@@ -134,8 +134,10 @@ const sendSmsResponse = (messages, to, options) => {
     promises.push(
       new Promise(resolve =>
         setTimeout(() => {
-          console.log(`${to} <== ${messages[i]}`);
-          nexmo.message.sendSms(options.did, to, normalize(messages[i]));
+          if (messages[i]) {
+            console.log(`${to} <== ${messages[i]}`);
+            nexmo.message.sendSms(options.did, to, normalize(messages[i]));
+          }
           resolve();
         }, i * throttling)
       )
@@ -143,7 +145,7 @@ const sendSmsResponse = (messages, to, options) => {
   }
 
   return Promise.all(promises).then(() => {
-    console.log('completed');
+    console.log("completed");
     return true;
   });
 };
